@@ -2,23 +2,23 @@ import React from 'react';
 import { useState } from 'react';
 import { useReducer } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
-import {MessageSquare, User, Mail, Eye, Loader2, Lock, EyeOff} from 'lucide-react'
-import {Link} from 'react-router-dom'
+import { MessageSquare, User, Mail, Eye, Loader2, Lock, EyeOff } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import AuthImagePattern from '../components/AuthImagePattern';
 import toast from 'react-hot-toast';
 
 const reducer = (state, action) => {
-  if(action.type === 'fullName'){
+  if (action.type === 'fullName') {
     return {
       ...state,
       fullName: action.fullName
     }
-  } else if(action.type === 'email'){
+  } else if (action.type === 'email') {
     return {
       ...state,
       email: action.email
     }
-  } else if(action.type === 'password') {
+  } else if (action.type === 'password') {
     return {
       ...state,
       password: action.password
@@ -30,7 +30,7 @@ const reducer = (state, action) => {
 
 function Signup(props) {
   const [showPassword, setShowPassword] = useState(false);
-  const {isSigningUp, signup} = useAuthStore()
+  const { isSigningUp, signup } = useAuthStore()
   const [formData, dispatch] = useReducer(reducer, {
     fullName: '',
     email: '',
@@ -38,36 +38,36 @@ function Signup(props) {
   })
 
   const validateForm = () => {
-    const {fullName, email, password} = formData
-    if(!fullName.trim()) {
-       toast.error("Full Name is Required")
+    const { fullName, email, password } = formData
+    if (!fullName.trim()) {
+      toast.error("Full Name is Required")
     }
-     if(!email.trim()) {
-       toast.error("Email is Required")
+    if (!email.trim()) {
+      toast.error("Email is Required")
     }
-     if(!password.trim()) {
-       toast.error("Password is Required")
+    if (!password.trim()) {
+      toast.error("Password is Required")
     }
-    if(!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))){
-       toast.error("Invalid Email")
+    if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+      toast.error("Invalid Email")
     }
-    if(password.length < 6){
-       toast.error("Password must be at least 6 characters")
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters")
 
     }
-   return true
+    return true
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const wasSuccess = validateForm();
-    if(wasSuccess){
+    if (wasSuccess) {
       signup(formData)
     }
-    
+
 
   }
- return (
+  return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* left side */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
@@ -92,15 +92,15 @@ function Signup(props) {
                 <span className="label-text font-medium">Full Name</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="size-5" />
+                <div className="absolute z-5 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="size-5 text-base-content/40" />
                 </div>
                 <input
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
                   value={formData.fullName}
-                  onChange={(e) => dispatch({ type :'fullName', fullName: e.target.value })}
+                  onChange={(e) => dispatch({ type: 'fullName', fullName: e.target.value })}
                 />
               </div>
             </div>
@@ -110,7 +110,7 @@ function Signup(props) {
                 <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute z-5 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="size-5 text-base-content/40" />
                 </div>
                 <input
@@ -118,7 +118,7 @@ function Signup(props) {
                   className={`input input-bordered w-full pl-10`}
                   placeholder="you@example.com"
                   value={formData.email}
-                   onChange={(e) => dispatch({ type :'email', email: e.target.value })}
+                  onChange={(e) => dispatch({ type: 'email', email: e.target.value })}
                 />
               </div>
             </div>
@@ -128,7 +128,7 @@ function Signup(props) {
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute z-5 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="size-5 text-base-content/40" />
                 </div>
                 <input
@@ -136,7 +136,7 @@ function Signup(props) {
                   className={`input input-bordered w-full pl-10`}
                   placeholder="••••••••"
                   value={formData.password}
-                   onChange={(e) => dispatch({ type :'password', password: e.target.value })}
+                  onChange={(e) => dispatch({ type: 'password', password: e.target.value })}
                 />
                 <button
                   type="button"
