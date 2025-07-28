@@ -19,9 +19,6 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 const __dirname=path.resolve()
-app.get('/hello', (req, res) => {
-  res.status(200).json({message: 'Welcome again'})
-})
 app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
 
