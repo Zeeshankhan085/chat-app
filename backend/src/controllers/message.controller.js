@@ -59,26 +59,3 @@ export const sendMessage = async (req, res) => {
   }
 
 }
-
-export const receiveMessage = async (req, res) => {
-  try {
-    const {userId} = req.params;
-  const {text, image} = req.body;
-    let imageUrl;
-  if(image){
-   imageUrl = await uploadImage(image)
-  }
-  const message = new Message({
-    text,
-    image: imageUrl,
-    senderId: userId,
-    receiverId: req.user._id
-  })
-  await message.save()
-  return res.status(201).json(message)
-  } catch(error){
-    console.log("Error in user send message controller", error.message);
-    return res.status(500).json({ message: "Internal Server Error" })
-  }
-
-}
