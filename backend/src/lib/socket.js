@@ -17,6 +17,7 @@ export function getReceiverSocketId(userId) {
 
 // used to store online users
 const userSocketMap = {}; // {userId: socketId}
+const typingMap = {}
 
 io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
@@ -30,8 +31,30 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
     delete userSocketMap[userId];
+    if(socket.id in typingMap){
+      io.to(getReceiverSocketId(typingMap[socket.id])).emit("close-typing")
+      delete typingMap[socket.id]
+    }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
+  socket.on("typing", (recepientId) => {
+    console.log(socket, recepientId, "typing------------------");
+    typingMap[socket.id] = recepientId
+    const to = getReceiverSocketId(recepientId);
+    io.to(to).emit("user-typing")
+  })
+  socket.on("close-typing", (recepientId) => {
+    console.log(socket, recepientId, "stopped typing------------------");
+    // typingMap[socket.id] = recepientId
+    let to;
+    if(recepientId){
+    to = getReceiverSocketId(recepientId);
+    } else {
+      to = typingMap[socket.id]
+    }
+    delete typingMap[socket.id]
+    io.to(to).emit("stopped-typing")
+  })
 });
 
 export { io, app, server };

@@ -7,7 +7,7 @@ function MessageInput () {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+  const { sendMessage, sendNotificationTyping, isUserTyping } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -47,8 +47,13 @@ function MessageInput () {
     }
   };
 
+  const handleInputChange = (text) => {
+    setText(text);
+    sendNotificationTyping()
+
+  }
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 relative w-full">
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -68,6 +73,7 @@ function MessageInput () {
           </div>
         </div>
       )}
+          {isUserTyping && <span class="absolute -top-4 text-base-content/50">typing...</span>}
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
@@ -76,7 +82,7 @@ function MessageInput () {
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
             placeholder="Type a message..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
           />
           <input
             type="file"
