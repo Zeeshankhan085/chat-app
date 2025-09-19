@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { axiosInstance } from '../lib/axios';
 import { useAuthStore } from './useAuthStore';
 import { devtools } from 'zustand/middleware'
+import { useGroupStore } from './useGroupStore';
 
 export const useChatStore = create(devtools((set, get) => ({
   messages: [],
@@ -12,6 +13,8 @@ export const useChatStore = create(devtools((set, get) => ({
   isMessagesLoading: false,
   isUserTyping: false,
   setSelectedUser: (selectedUser) => {
+    const {setCurrentGroup} = useGroupStore.getState();
+    // setCurrentGroup(null)
     set({ selectedUser })
   },
 

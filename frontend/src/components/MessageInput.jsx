@@ -2,12 +2,15 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useGroupStore } from "../store/useGroupStore";
 
 function MessageInput () {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage, sendNotificationTyping, isUserTyping } = useChatStore();
+  const { sendMessage, sendNotificationTyping, isUserTyping, selectedUser} = useChatStore();
+  const timerRef = useRef()
+  const {sendGroupMessage} = useGroupStore()
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -33,12 +36,17 @@ function MessageInput () {
     if (!text.trim() && !imagePreview) return;
 
     try {
+      if(selectedUser){
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
       });
-
-      // Clear form
+      } else{
+      await sendGroupMessage({
+        text: text.trim(),
+        image: imagePreview,
+      })
+      }
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -47,9 +55,21 @@ function MessageInput () {
     }
   };
 
+const debouncedFn = (cb) => {
+  if(timerRef && timerRef.current){
+    return
+  }
+  timerRef.current = setTimeout(() => {
+    cb()
+    timerRef.current = null;
+  }, 1000)
+} 
+
   const handleInputChange = (text) => {
     setText(text);
-    sendNotificationTyping()
+    if(selectedUser){
+    debouncedFn(sendNotificationTyping)
+    }
 
   }
   return (
@@ -91,7 +111,6 @@ function MessageInput () {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle

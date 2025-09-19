@@ -7,10 +7,7 @@ export const protectRoutes = async (req, res, next) => {
   if(!token){
     return res.status(401).json({message: "User is not authenticated"})
   }
-console.log({token});
-
   const decoded = jwt.verify(token, process.env.JWT_SECRET)
-  console.log(decoded, "decoded");
   
   if(!decoded){
     return res.status(401).json({message: "Invalid Token"})

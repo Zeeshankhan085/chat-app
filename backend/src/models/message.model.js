@@ -25,7 +25,9 @@ const MessageSchema = mongoose.Schema({
 const GroupChatSchema = mongoose.Schema({
   text: {
     type: String,
-    required: true,
+  },
+  image: {
+    type: String,
   },
   senderId: {
     type: mongoose.Types.ObjectId,
@@ -45,4 +47,3 @@ export const GroupChat = mongoose.model("GroupChat", GroupChatSchema);
 
 
 export const Message = mongoose.model("Message", MessageSchema)
-export default Message

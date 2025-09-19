@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import { group } from "console";
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +15,8 @@ const io = new Server(server, {
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
+
+// const groups = {}
 
 // used to store online users
 const userSocketMap = {}; // {userId: socketId}
@@ -38,13 +41,13 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
   socket.on("typing", (recepientId) => {
-    console.log(socket, recepientId, "typing------------------");
+    console.log("typing------------------");
     typingMap[socket.id] = recepientId
     const to = getReceiverSocketId(recepientId);
     io.to(to).emit("user-typing")
   })
   socket.on("close-typing", (recepientId) => {
-    console.log(socket, recepientId, "stopped typing------------------");
+    console.log("stopped typing------------------");
     // typingMap[socket.id] = recepientId
     let to;
     if(recepientId){
@@ -54,6 +57,11 @@ io.on("connection", (socket) => {
     }
     delete typingMap[socket.id]
     io.to(to).emit("stopped-typing")
+  })
+
+  socket.on("new-chatroom", (groupId) => {
+    console.log(groupId, "groupId");
+    socket.join(`chatroom-${groupId}`)
   })
 });
 
