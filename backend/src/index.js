@@ -28,14 +28,13 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use(protectRoutes)
-app.use("/api/messages", messageRoutes);
-app.use("/api/groups", groupRoutes)
+app.use("/api/messages", protectRoutes, messageRoutes);
+app.use("/api/groups", protectRoutes, groupRoutes)
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  
+
   app.get("/{*any}", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
