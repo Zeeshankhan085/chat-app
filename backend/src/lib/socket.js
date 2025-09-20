@@ -63,6 +63,11 @@ io.on("connection", (socket) => {
     console.log(groupId, "groupId");
     socket.join(`chatroom-${groupId}`)
   })
+
+  socket.on("exit-chatroom", (groupId) => {
+    console.log(groupId, "groupId leave");
+    socket.leave(`chatroom-${groupId}`)
+  })
 });
 
 export { io, app, server };

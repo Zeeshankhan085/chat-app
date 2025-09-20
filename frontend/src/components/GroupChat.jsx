@@ -7,7 +7,7 @@ import MessageInput from './MessageInput';
 import GroupChatHeader from './GroupChatHeader';
 
 function GroupChat(props) {
-  const {getGroupMessages, currentGroup, groupMessages, isLoading, subscribeToGroupMessages} = useGroupStore();
+  const {getGroupMessages, currentGroup, groupMessages, isLoading, subscribeToGroupMessages, unSubscribeToGroupMessages} = useGroupStore();
   const {authUser} = useAuthStore()
   const messageRef=useRef()
 
@@ -15,6 +15,7 @@ function GroupChat(props) {
 if(currentGroup._id){
   getGroupMessages();
   subscribeToGroupMessages()
+  return unSubscribeToGroupMessages
 }
   }, [currentGroup._id])
 

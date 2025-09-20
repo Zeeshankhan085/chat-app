@@ -44,14 +44,19 @@ export const useGroupStore = create(devtools((set, get) => ({
   subscribeToGroupMessages: async () => {
     const {socket} = useAuthStore.getState();
     if(socket){
-      console.log("helloooo=");
       
       socket.emit("new-chatroom", get().currentGroup._id)
       socket.on("group-chat-received", (message) => {
-        console.log(message, "data----------- received");
         set({ groupMessages: [...get().groupMessages, message] })
         
       })
+    }
+  },
+  unSubscribeToGroupMessages: async () => {
+    const {socket} = useAuthStore.getState();
+    if(socket){
+      socket.emit("exit-chatroom", get().currentGroup._id)
+      socket.off("group-chat-received")
     }
   }
 })))
